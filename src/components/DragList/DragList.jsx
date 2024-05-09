@@ -1,4 +1,3 @@
-import React from "react";
 import Button from "@mui/material/Button";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 import InputIcon from "@mui/icons-material/Input";
@@ -8,12 +7,18 @@ import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 
 const DragList = ({ visible }) => {
+  const onDragStart = (event, nodeType) => {
+    event.dataTransfer.setData("application/reactflow", nodeType);
+    event.dataTransfer.effectAllowed = "move";
+  };
   return (
     <div className={`flex flex-col gap-1 ${visible ? "" : "duration-300"}`}>
       <Button
         className="w-full h-[50px]"
         variant="contained"
         style={{ backgroundColor: "transparent", cursor: "grab" }}
+        onDragStart={(event) => onDragStart(event, "input")}
+        draggable
       >
         <div className="flex justify-between w-full">
           <div className="max-sm:text-[10px]">
@@ -29,6 +34,8 @@ const DragList = ({ visible }) => {
         className="w-full h-[50px]"
         variant="contained"
         style={{ backgroundColor: "transparent", cursor: "grab" }}
+        onDragStart={(event) => onDragStart(event, "output")}
+        draggable
       >
         <div className="flex justify-between w-full">
           <div className="max-sm:text-[10px]">
@@ -44,6 +51,8 @@ const DragList = ({ visible }) => {
         className="w-full h-[50px]"
         variant="contained"
         style={{ backgroundColor: "transparent", cursor: "grab" }}
+        onDragStart={(event) => onDragStart(event, "add")}
+        draggable
       >
         <div className="flex justify-between w-full">
           <div className="max-sm:text-[10px]">
@@ -59,6 +68,8 @@ const DragList = ({ visible }) => {
         className="w-full h-[50px]"
         variant="contained"
         style={{ backgroundColor: "transparent", cursor: "grab" }}
+        onDragStart={(event) => onDragStart(event, "substract")}
+        draggable
       >
         <div className="flex justify-between w-full">
           <div className="max-sm:text-[10px]">
@@ -74,6 +85,8 @@ const DragList = ({ visible }) => {
         className="w-full h-[50px]"
         variant="contained"
         style={{ backgroundColor: "transparent", cursor: "grab" }}
+        onDragStart={(event) => onDragStart(event, "multiply")}
+        draggable
       >
         <div className="flex justify-between w-full">
           <div className="max-sm:text-[10px]">
@@ -89,6 +102,8 @@ const DragList = ({ visible }) => {
         className="w-full h-[50px] text-center"
         variant="contained"
         style={{ backgroundColor: "transparent", cursor: "grab" }}
+        onDragStart={(event) => onDragStart(event, "divide")}
+        draggable
       >
         <div className="flex justify-between w-full items-center">
           <div className="flex ">

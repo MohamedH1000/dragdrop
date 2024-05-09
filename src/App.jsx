@@ -8,7 +8,7 @@ function App() {
   return (
     <div>
       <Header setVisible={setVisible} visible={visible} />
-      <div className="flex w-full h-screen mt-3">
+      <div className="flex w-full h-[89vh] mt-3">
         <div
           className={`bg-[#343843]  ${
             visible ? "w-[20%] max-lg:w-[40%]" : "max-sm:hidden"
