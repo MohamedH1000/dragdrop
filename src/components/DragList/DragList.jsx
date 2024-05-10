@@ -68,13 +68,13 @@ const DragList = ({ visible }) => {
         className="w-full h-[50px]"
         variant="contained"
         style={{ backgroundColor: "transparent", cursor: "grab" }}
-        onDragStart={(event) => onDragStart(event, "substract")}
+        onDragStart={(event) => onDragStart(event, "subtract")}
         draggable
       >
         <div className="flex justify-between w-full">
           <div className="max-sm:text-[10px]">
             <RemoveCircleIcon />
-            &nbsp;&nbsp; Substract
+            &nbsp;&nbsp; Subtract
           </div>
           <div className="max-sm:hidden">
             <DragHandleIcon />
