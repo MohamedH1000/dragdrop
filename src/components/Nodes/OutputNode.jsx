@@ -15,11 +15,15 @@ const OutputNode = ({ data }) => {
             {data.value ? data.value : ""}
           </div>
         </div>
-        <Handle type="target" position={Position.Left} />
+        <Handle
+          type="target"
+          position={Position.Left}
+          className="h-7 w-4 -left-2"
+        />
         <Handle
           type="source"
           position={Position.Right}
-          className="bg-[#FF0000]"
+          className="bg-[#FF0000]  h-7 w-4 -right-2"
         />
       </div>
     </>

@@ -38,7 +38,7 @@ const DropContainer = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   // console.log("all nodes", nodes);
-  // console.log("all edges", edges);
+  console.log("all edges", edges);
 
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const allSources = edges.map((edge) => {
@@ -91,8 +91,10 @@ const DropContainer = () => {
         ) {
           if (parseInt(sourseNode.data.value) > subtract) {
             subtract = parseInt(sourseNode.data.value) - subtract;
+          } else if (subtract > parseInt(sourseNode.data.value)) {
+            subtract = subtract - parseInt(sourseNode.data.value);
           } else {
-            subtract -= parseInt(sourseNode.data.value);
+            subtract = parseInt(sourseNode.data.value) - subtract;
           }
         } else if (
           targetNode &&
@@ -105,7 +107,13 @@ const DropContainer = () => {
           sourseNode.data.value &&
           targetNode.type === "divide"
         ) {
-          divide = parseInt(sourseNode.data.value) / divide;
+          if (parseInt(sourseNode.data.value) > divide) {
+            divide = parseInt(sourseNode.data.value) / divide;
+          } else if (divide > parseInt(sourseNode.data.value)) {
+            divide = divide / parseInt(sourseNode.data.value);
+          } else {
+            divide = parseInt(sourseNode.data.value) / divide;
+          }
         }
       });
     });
@@ -134,10 +142,10 @@ const DropContainer = () => {
       return node;
     });
     setNodes(updatedNodes);
-    console.log("here is the sum", sum);
-    console.log("here is the subtract ", subtract);
-    console.log("here is the multiply ", multiply);
-    console.log("here is the divide ", divide);
+    // console.log("here is the sum", sum);
+    // console.log("here is the subtract ", subtract);
+    // console.log("here is the multiply ", multiply);
+    // console.log("here is the divide ", divide);
   }, [edges]);
 
   const onConnect = useCallback(
