@@ -165,7 +165,7 @@ const DropContainer = () => {
         const updatedParams = {
           ...params,
           data: { ...params.data, value: newValue },
-          type: "step",
+          type: "smoothstep",
         };
 
         const updatedTargetNode = {
@@ -178,7 +178,7 @@ const DropContainer = () => {
         setEdges((eds) => addEdge(updatedParams, eds));
         setNodes(updatedNodes);
       }
-      setEdges((eds) => addEdge({ ...params, type: "step" }, eds));
+      setEdges((eds) => addEdge({ ...params, type: "smoothstep" }, eds));
     },
     [nodes]
   );
