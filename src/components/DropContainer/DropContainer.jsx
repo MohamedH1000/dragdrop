@@ -36,10 +36,11 @@ const edgeTypes = {
 const DropContainer = () => {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  console.log("all nodes", nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  console.log("all edges", edges);
+  // console.log("all nodes", nodes);
+  // console.log("all edges", edges);
 
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const allSources = edges.map((edge) => {
     return { source: edge.source };
   });
@@ -47,9 +48,6 @@ const DropContainer = () => {
   const allTargets = edges.map((edge) => {
     return { target: edge.target };
   });
-
-  const [reactFlowInstance, setReactFlowInstance] = useState(null);
-
   const allSourceNodes = allSources.map((source) =>
     nodes.find((node) => node.id === source.source)
   );
@@ -62,15 +60,15 @@ const DropContainer = () => {
   const uniqueTargetNodes = Array.from(new Set(allTargetNodes));
   // console.log("all Source nodes", allSourceNodes);
   // console.log("all target nodes", allTargetNodes);
-  console.log("Unique Source nodes", uniqueSourceNodes);
-  console.log("uniques target nodes", uniqueTargetNodes);
-
-  // CASE FOR THE OUTPUT
-
+  // console.log("Unique Source nodes", uniqueSourceNodes);
+  // console.log("uniques target nodes", uniqueTargetNodes);
   // CASE FOR THE SUM
 
-  let sum = 0;
   useEffect(() => {
+    let sum = 0;
+    let subtract = 0;
+    let multiply = 1;
+    let divide = 1;
     allSourceNodes.forEach((sourceNode) => {
       // For each source node, find all outgoing edges
       const outgoingEdges = edges.filter(
@@ -84,166 +82,97 @@ const DropContainer = () => {
         const sourseNode = allSourceNodes.find(
           (node) => node.id === edge.source
         );
-        if (targetNode && sourseNode.data.value) {
+        if (targetNode && sourseNode.data.value && targetNode.type === "add") {
           sum += parseInt(sourceNode.data.value);
-        }
-        console.log("here is the sum", sum);
-
-        const updatedTargetNode = {
-          ...targetNode,
-          data: { ...targetNode.data, value: sum },
-        };
-        const updatedNodes = nodes.map((node) =>
-          node.id === targetNode.id ? updatedTargetNode : node
-        );
-        setNodes(updatedNodes);
-      });
-    });
-  }, [nodes]);
-
-  // CASE FOR subtract
-
-  let subtract = 0;
-  useEffect(() => {
-    allSourceNodes.forEach((sourceNode) => {
-      // For each source node, find all outgoing edges
-      const outgoingEdges = edges.filter(
-        (edge) => edge.source === sourceNode.id
-      );
-      // Iterate over outgoing edges and add their target node values to the sum
-      outgoingEdges.forEach((edge) => {
-        const targetNode = allTargetNodes.find(
-          (node) => node.id === edge.target
-        );
-        const sourseNode = allSourceNodes.find(
-          (node) => node.id === edge.source
-        );
-        if (targetNode && sourseNode.data.value) {
+        } else if (
+          targetNode &&
+          sourseNode.data.value &&
+          targetNode.type === "subtract"
+        ) {
           if (parseInt(sourseNode.data.value) > subtract) {
             subtract = parseInt(sourseNode.data.value) - subtract;
           } else {
             subtract -= parseInt(sourseNode.data.value);
           }
-        }
-        console.log("here is the subtract", subtract);
-
-        const updatedTargetNode = {
-          ...targetNode,
-          data: { ...targetNode.data, value: subtract },
-        };
-        const updatedNodes = nodes.map((node) =>
-          node.id === targetNode.id ? updatedTargetNode : node
-        );
-        setNodes(updatedNodes);
-      });
-    });
-  }, [nodes]);
-
-  let multiply = 0;
-  useEffect(() => {
-    allSourceNodes.forEach((sourceNode) => {
-      // For each source node, find all outgoing edges
-      const outgoingEdges = edges.filter(
-        (edge) => edge.source === sourceNode.id
-      );
-      // Iterate over outgoing edges and add their target node values to the sum
-      outgoingEdges.forEach((edge) => {
-        const targetNode = allTargetNodes.find(
-          (node) => node.id === edge.target
-        );
-        const sourseNode = allSourceNodes.find(
-          (node) => node.id === edge.source
-        );
-        if (targetNode && sourseNode.data.value) {
+        } else if (
+          targetNode &&
+          sourseNode.data.value &&
+          targetNode.type === "multiply"
+        ) {
           multiply *= parseInt(sourseNode.data.value);
+        } else if (
+          targetNode &&
+          sourseNode.data.value &&
+          targetNode.type === "divide"
+        ) {
+          divide = parseInt(sourseNode.data.value) / divide;
         }
-        console.log("here is the multiply", multiply);
-
-        const updatedTargetNode = {
-          ...targetNode,
-          data: { ...targetNode.data, value: multiply },
-        };
-        const updatedNodes = nodes.map((node) =>
-          node.id === targetNode.id ? updatedTargetNode : node
-        );
-        setNodes(updatedNodes);
       });
     });
-  }, [nodes]);
-
-  let divide = 0;
-  useEffect(() => {
-    allSourceNodes.forEach((sourceNode) => {
-      // For each source node, find all outgoing edges
-      const outgoingEdges = edges.filter(
-        (edge) => edge.source === sourceNode.id
-      );
-      // Iterate over outgoing edges and add their target node values to the sum
-      outgoingEdges.forEach((edge) => {
+    const updatedNodes = nodes.map((node) => {
+      if (node.type === "add") {
         const targetNode = allTargetNodes.find(
-          (node) => node.id === edge.target
+          (target) => target.id === node.id
         );
-        const sourseNode = allSourceNodes.find(
-          (node) => node.id === edge.source
+        return { ...node, data: { ...node.data, value: sum } };
+      } else if (node.type === "subtract") {
+        const targetNode = allTargetNodes.find(
+          (target) => target.id === node.id
         );
-        if (targetNode && sourseNode.data.value) {
-          divide /= parseInt(sourseNode.data.value);
-        }
-        console.log("here is the divide", divide);
-
-        const updatedTargetNode = {
-          ...targetNode,
-          data: { ...targetNode.data, value: divide },
-        };
-        const updatedNodes = nodes.map((node) =>
-          node.id === targetNode.id ? updatedTargetNode : node
+        return { ...node, data: { ...node.data, value: subtract } };
+      } else if (node.type === "multiply") {
+        const targetNode = allTargetNodes.find(
+          (target) => target.id === node.id
         );
-        setNodes(updatedNodes);
-      });
+        return { ...node, data: { ...node.data, value: multiply } };
+      } else if (node.type === "divide") {
+        const targetNode = allTargetNodes.find(
+          (target) => target.id === node.id
+        );
+        return { ...node, data: { ...node.data, value: divide } };
+      }
+      return node;
     });
-  }, [nodes]);
+    setNodes(updatedNodes);
+    console.log("here is the sum", sum);
+    console.log("here is the subtract ", subtract);
+    console.log("here is the multiply ", multiply);
+    console.log("here is the divide ", divide);
+  }, [edges]);
+
   const onConnect = useCallback(
     (params) => {
       const { source, target } = params;
 
       const sourceNode = nodes.find((node) => node.id === source);
       const targetNode = nodes.find((node) => node.id === target);
-
-      if (sourceNode && targetNode) {
-        switch (targetNode.type) {
-          case "output": {
-            const newValue = sourceNode.data.value;
-            const incomingEdges = edges.filter(
-              (edge) => edge.target === target
-            );
-            if (incomingEdges.length > 0 && targetNode.type === "output") {
-              // Output node already has an incoming edge, prevent creation of new edge
-              console.log("Output node already has an incoming edge");
-              return;
-            }
-            const updatedParams = {
-              ...params,
-              data: { ...params.data, value: newValue },
-              type: "step",
-            };
-
-            const updatedTargetNode = {
-              ...targetNode,
-              data: { ...targetNode.data, value: newValue },
-            };
-            const updatedNodes = nodes.map((node) =>
-              node.id === target ? updatedTargetNode : node
-            );
-            setEdges((eds) => addEdge(updatedParams, eds));
-            setNodes(updatedNodes);
-          }
-          default: {
-            setEdges((eds) => addEdge({ ...params, type: "step" }, eds));
-          }
+      if (targetNode.type === "output") {
+        const newValue = sourceNode.data.value;
+        const incomingEdges = edges.filter((edge) => edge.target === target);
+        if (incomingEdges.length > 0 && targetNode.type === "output") {
+          // Output node already has an incoming edge, prevent creation of new edge
+          console.log("Output node already has an incoming edge");
+          return;
         }
+        const updatedParams = {
+          ...params,
+          data: { ...params.data, value: newValue },
+          type: "step",
+        };
+
+        const updatedTargetNode = {
+          ...targetNode,
+          data: { ...targetNode.data, value: newValue },
+        };
+        const updatedNodes = nodes.map((node) =>
+          node.id === target ? updatedTargetNode : node
+        );
+        setEdges((eds) => addEdge(updatedParams, eds));
+        setNodes(updatedNodes);
       }
+      setEdges((eds) => addEdge({ ...params, type: "step" }, eds));
     },
-    [setEdges]
+    [nodes]
   );
 
   const onDragOver = useCallback((event) => {
