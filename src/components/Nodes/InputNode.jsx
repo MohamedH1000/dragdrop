@@ -1,7 +1,6 @@
 import React, { memo } from "react";
 import InputIcon from "@mui/icons-material/Input";
 import { Handle, Position } from "reactflow";
-import TextField from "@mui/material/TextField";
 
 const InputNode = ({ data }) => {
   return (
@@ -9,20 +8,19 @@ const InputNode = ({ data }) => {
       <div className="shadow-md rounded-md bg-[#7DB8EB] border-1 border-stone-400 text-white flex flex-col">
         <div className="p-2 flex justify-center items-center gap-3">
           <InputIcon />
-          <div className="text-lg font-bold">{data.label}</div>
+          <div className="text-lg font-bold">Input</div>
         </div>
         <div className="p-3 bg-white">
-          <TextField
+          <input
             type="number"
-            size="small"
-            className="bg-[#EAEAEA]"
+            className="bg-[#EAEAEA] outline-none  text-black p-2 w-20 rounded-md text-center"
             onChange={(e) => (data.value = e.target.value)}
           />
         </div>
         <Handle
           type="source"
           position={Position.Right}
-          className="bg-[#FF0000]  h-7 w-4 -right-2"
+          className="bg-transparent border-none  h-7 w-4 -right-2"
         />
       </div>
     </>
