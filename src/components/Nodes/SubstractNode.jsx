@@ -12,12 +12,12 @@ const SubtractNode = ({ data }) => {
       <Handle
         type="target"
         position={Position.Left}
-        className="h-7 w-4 -left-2"
+        className="h-7 w-4 -left-2 bg-transparent border-none"
       />
       <Handle
         type="source"
         position={Position.Right}
-        className="bg-[#FF0000]  h-7 w-4 -right-2"
+        className="bg-transparent border-none  h-7 w-4 -right-2"
       />
     </div>
   );
